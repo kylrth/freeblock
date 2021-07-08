@@ -1,0 +1,5 @@
+0.0.0.0   google.com
+0.0.0.0   internal.example.com # 1.2.3.4
+127.0.0.1 devicename # 4.3.2.1 are my favorite numbers
+#0.0.0.0   example.com # already unblocked
+1.2.3.4   github.com # already unblocked
