@@ -12,7 +12,7 @@ import (
 // Cmd is the root freeblock command.
 var Cmd = &cobra.Command{
 	Use:   "freeblock",
-	Short: "freeblock provides tools for blocking and unblocking websites using /etc/hosts",
+	Short: "freeblock provides tools for blocking and unblocking websites using the hosts file",
 }
 
 func init() {

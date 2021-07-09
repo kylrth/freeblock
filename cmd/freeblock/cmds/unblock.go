@@ -13,7 +13,7 @@ import (
 var UnblockCmd = &cobra.Command{
 	Use:   "unblock DOMAIN [DOMAIN...]",
 	Short: "unblock domains",
-	Long: `Unblock domains by commenting out 0.0.0.0 entries from /etc/hosts for each
+	Long: `Unblock domains by commenting out 0.0.0.0 entries from the hosts file for each
 domain.
 
 For blocked hosts with a comment that has another IP address, the domain is
@@ -30,7 +30,7 @@ reverted back to to that IP address and the comment is deleted.
 
 func init() {
 	UnblockCmd.Flags().StringVar(
-		&hostsFile, "hosts-file", "/etc/hosts", "Change the default hosts file.")
+		&hostsFile, "hosts-file", defaultHostsFile, "Change the default hosts file.")
 }
 
 // Unblock blocks the domains in the hostsFile.

@@ -4,6 +4,7 @@ package cmds
 import (
 	"fmt"
 	"os"
+	"runtime"
 
 	"github.com/spf13/cobra"
 
@@ -14,7 +15,7 @@ import (
 var BlockCmd = &cobra.Command{
 	Use:   "block DOMAIN [DOMAIN...]",
 	Short: "block domains",
-	Long: `Block domains by adding a 0.0.0.0 entry to /etc/hosts for each domain.
+	Long: `Block domains by adding a 0.0.0.0 entry to the hosts file for each domain.
 
 For hosts already present in the file, the address is set to 0.0.0.0 and the old
 address is kept as a comment at the end of the line. If there is a commented-out
@@ -29,11 +30,22 @@ line for a domain, that line is uncommented.
 	},
 }
 
-var hostsFile string
+var (
+	hostsFile        string
+	defaultHostsFile = getDefaultHostsFile()
+)
+
+func getDefaultHostsFile() string {
+	if runtime.GOOS == "windows" {
+		return "C:\\Windows\\System32\\drivers\\etc\\hosts"
+	}
+
+	return "/etc/hosts"
+}
 
 func init() {
 	BlockCmd.Flags().StringVar(
-		&hostsFile, "hosts-file", "/etc/hosts", "Change the default hosts file.")
+		&hostsFile, "hosts-file", defaultHostsFile, "Change the default hosts file.")
 }
 
 const (

@@ -30,7 +30,7 @@ again before exiting when a SIGINT is received.
 
 func init() {
 	OpenCmd.Flags().StringVar(
-		&hostsFile, "hosts-file", "/etc/hosts", "Change the default hosts file.")
+		&hostsFile, "hosts-file", defaultHostsFile, "Change the default hosts file.")
 }
 
 // Open temporarily unblocks the domains in the hostsFile, and then closes them when it receives a

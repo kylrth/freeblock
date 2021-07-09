@@ -47,16 +47,19 @@ build: $(BINDIR)/freeblock
 ## RELEASE BUILDS
 
 RELEASEDIR := $(BINDIR)/release
-PLATFORMS := darwin linux
+PLATFORMS := darwin linux windows
 ARCHES := amd64 arm arm64
 
+# This rule expects targets with the format $(RELEASEDIR)/freeblock-GOOS-GOARCH(.exe)?
 $(RELEASEDIR)/freeblock-%: $(GO_FILES)
 	mkdir -p $(RELEASEDIR)
-	GOOS=$(word 2,$(subst -, ,$@)) GOARCH=$(word 3,$(subst -, ,$@)) \
+	GOOS=$(word 2,$(subst -, ,$@)) GOARCH=$(word 3,$(subst -, ,$(word 1,$(subst ., ,$@)))) \
 	  go build -o $@ -ldflags "-s -w" ./cmd/freeblock
 
-# darwin-arm combination is not supported by go build
+windowsExt = $(if $(subst windows,,$(plat)),,.exe)
+
+# darwin-arm and windows-arm64 are not supported by go build
 .PHONY: release
-release: $(filter-out %-darwin-arm, \
+release: $(filter-out %-darwin-arm,$(filter-out %-windows-arm64.exe, \
 	$(foreach arch,$(ARCHES),\
-	$(foreach plat,$(PLATFORMS),$(RELEASEDIR)/freeblock-$(plat)-$(arch))))
+	$(foreach plat,$(PLATFORMS),$(RELEASEDIR)/freeblock-$(plat)-$(arch)$(windowsExt)))))
