@@ -33,6 +33,8 @@ TESTTARGET = ./...
 test:
 	go test -cover -race -bench=. ${TESTTARGET}
 
+## DEBUG BUILDS
+
 GO_FILES = $(shell find . -type f -name '*.go')
 
 $(BINDIR)/freeblock: $(GO_FILES)
@@ -41,3 +43,20 @@ $(BINDIR)/freeblock: $(GO_FILES)
 
 .PHONY: build
 build: $(BINDIR)/freeblock
+
+## RELEASE BUILDS
+
+RELEASEDIR := $(BINDIR)/release
+PLATFORMS := darwin linux
+ARCHES := amd64 arm arm64
+
+$(RELEASEDIR)/freeblock-%: $(GO_FILES)
+	mkdir -p $(RELEASEDIR)
+	GOOS=$(word 2,$(subst -, ,$@)) GOARCH=$(word 3,$(subst -, ,$@)) \
+	  go build -o $@ -ldflags "-s -w" ./cmd/freeblock
+
+# darwin-arm combination is not supported by go build
+.PHONY: release
+release: $(filter-out %-darwin-arm, \
+	$(foreach arch,$(ARCHES),\
+	$(foreach plat,$(PLATFORMS),$(RELEASEDIR)/freeblock-$(plat)-$(arch))))

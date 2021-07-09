@@ -15,12 +15,12 @@ jobs:
       with:
         go-version: 1.16
 
-    - name: Build
-      run: make build
+    - name: Build release binaries
+      run: make release
 
-    - name: Release
+    - name: Release to GitHub
       uses: skx/github-action-publish-binaries@release-0.15
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        args: 'bin/*'
+        args: 'bin/release/*'
