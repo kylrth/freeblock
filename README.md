@@ -6,6 +6,14 @@ You can download the `freeblock` binary by going to the latest release and downl
 
 On Windows, the default hosts file location is `C:\Windows\System32\drivers\etc\hosts`.
 
+## installation
+
+Go to [Releases](https://github.com/kylrth/freeblock/releases) and download the latest release for your architecture to somewhere on your PATH, e.g.:
+
+```sh
+wget 'https://github.com/kylrth/freeblock/releases/download/v1.0.0/freeblock-linux-amd64' -O - | sudo tee /usr/bin/freeblock > /dev/null
+```
+
 ## usage
 
 The `freeblock` binary has three subcommands:
