@@ -1,4 +1,4 @@
-// Package hosts provides tooks for handling the hosts file, usually found at /etc/hosts.
+// Package hosts provides tools for handling the hosts file, usually found at /etc/hosts.
 package hosts
 
 import (
