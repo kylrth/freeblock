@@ -1,6 +1,7 @@
 package cmds
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"os/signal"
@@ -42,6 +43,12 @@ func Open(domains []string, hostsFile string, osSignals <-chan os.Signal) (err e
 		return fmt.Errorf("backup hosts file: %w", err)
 	}
 	defer func() {
+		var as *ErrBlockTiming
+		if errors.As(err, &as) {
+			// No need to restore because we were kept from unblocking.
+			return
+		}
+
 		fmt.Fprintln(os.Stderr, "\nRestoring old hosts file...")
 		e := writeLines(backupLines, hostsFile)
 		if e != nil && err == nil {
@@ -52,7 +59,7 @@ func Open(domains []string, hostsFile string, osSignals <-chan os.Signal) (err e
 		fmt.Fprintln(os.Stderr, "\tdone.")
 	}()
 
-	err = Unblock(domains, hostsFile)
+	err = Unblock(domains, hostsFile, DefaultNower{})
 	if err != nil {
 		return fmt.Errorf("unblock domains: %w", err)
 	}

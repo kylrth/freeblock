@@ -5,6 +5,7 @@ import (
 	"net"
 	"os"
 	"strings"
+	"time"
 
 	"github.com/spf13/cobra"
 )
@@ -21,7 +22,7 @@ reverted back to to that IP address and the comment is deleted.
 `,
 	Args: cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		if err := Unblock(args, hostsFile); err != nil {
+		if err := Unblock(args, hostsFile, DefaultNower{}); err != nil {
 			fmt.Fprintf(os.Stderr, "error: %v\n", err)
 			os.Exit(1)
 		}
@@ -33,8 +34,20 @@ func init() {
 		&hostsFile, "hosts-file", defaultHostsFile, "Change the default hosts file.")
 }
 
+// Nower is something that can return the current time. Used for mocking during tests.
+type Nower interface {
+	Now() time.Time
+}
+
+// DefaultNower implements Nower with time.Now.
+type DefaultNower struct{}
+
+func (DefaultNower) Now() time.Time {
+	return time.Now()
+}
+
 // Unblock blocks the domains in the hostsFile.
-func Unblock(domains []string, hostsFile string) error {
+func Unblock(domains []string, hostsFile string, nower Nower) error {
 	lines, err := readLines(hostsFile)
 	if err != nil {
 		return err
@@ -51,6 +64,13 @@ func Unblock(domains []string, hostsFile string) error {
 		for _, hostname := range hostnames {
 			if !contains(domains, hostname) {
 				continue
+			}
+
+			// See if there's a time range we need to respect.
+			blockStart, blockEnd := line.Timing()
+			now := nower.Now()
+			if now.Hour() >= blockStart && now.Hour() < blockEnd {
+				return &ErrBlockTiming{i + 1, hostname, blockStart, blockEnd, now}
 			}
 
 			oldIP := line.GetIP()
@@ -79,4 +99,20 @@ func Unblock(domains []string, hostsFile string) error {
 	}
 
 	return writeLines(lines, hostsFile)
+}
+
+// ErrBlockTiming is returned when the hosts file has specified that this domain is not to be
+// unblocked right now.
+type ErrBlockTiming struct {
+	lineNum    int
+	domain     string
+	start, end int
+	now        time.Time
+}
+
+func (e *ErrBlockTiming) Error() string {
+	return fmt.Sprintf(
+		"it's %02d:%02d and line %d of the hosts file disallows unblocking %s from %02d:00 to %02d:00",
+		e.now.Hour(), e.now.Minute(), e.lineNum, e.domain, e.start, e.end,
+	)
 }

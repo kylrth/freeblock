@@ -3,6 +3,7 @@ package hosts
 
 import (
 	"net"
+	"strconv"
 	"strings"
 	"unicode"
 )
@@ -88,6 +89,18 @@ func (l Line) Hostnames() []string {
 		return nil
 	}
 
+	for i := 1; i < len(f); i++ {
+		if f[i][0] == '#' {
+			return f[1:i]
+		}
+
+		idx := strings.Index(f[i], "#")
+		if idx != -1 {
+			// Comment starts here.
+			return append(f[1:i], f[i][:idx])
+		}
+	}
+
 	return f[1:]
 }
 
@@ -113,4 +126,54 @@ func (l *Line) Uncomment() {
 	numSpaces := strings.Index(string(*l), s) //nolint:gocritic // false positive
 
 	*l = Line(string(*l)[:numSpaces] + strings.TrimLeftFunc(s[1:], unicode.IsSpace))
+}
+
+// Timing returns the times when the line shouldn't be unblocked. If that isn't specified or if this
+// isn't a host line at all, zeros are returned.
+func (l *Line) Timing() (start, end int) {
+	s := strings.TrimSpace(string(*l))
+
+	if s == "" {
+		return 0, 0
+	}
+	if s[0] == '#' {
+		s = s[1:]
+	}
+
+	f := strings.Fields(strings.TrimSpace(s))
+	if len(f) < 2 || !isIPAddress(f[0]) {
+		return 0, 0
+	}
+
+	for i := 1; i < len(f); i++ {
+		idx := strings.Index(f[i], "#")
+		if idx == -1 {
+			continue
+		}
+
+		s = f[i][idx:]
+		const prefix = "#freeblock:"
+		if len(s) < len(prefix) || s[:len(prefix)] != prefix {
+			return 0, 0
+		}
+		s = s[len(prefix):]
+
+		hours := strings.Split(s, "-")
+		if len(hours) != 2 {
+			return 0, 0
+		}
+
+		start, err := strconv.Atoi(hours[0])
+		if err != nil {
+			return 0, 0
+		}
+		end, err := strconv.Atoi(hours[1])
+		if err != nil {
+			return 0, 0
+		}
+
+		return start, end
+	}
+
+	return 0, 0
 }
