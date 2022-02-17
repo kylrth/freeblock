@@ -56,74 +56,68 @@ issues:
 linters:
   disable-all: true
   enable:
+    - bidichk
+    - decorder
     - asciicheck
     - bodyclose
     - depguard
     - dogsled
     - dupl
-    - durationcheck
     - errcheck
+    - errchkjson
+    - errorlint
     - exhaustive
-    - exportloopref
     - funlen
     - gci
     - goconst
     - gocritic
     - gocyclo
-    - goerr113
     - gofmt
     - gofumpt
     - goimports
     - gomoddirectives
     - gomodguard
-    - goprintffuncname
     - gosec
     - gosimple
     - govet
+    - grouper
     - ifshort
     - importas
-    - ineffassign
+    - ireturn
     - lll
+    - maintidx
     - makezero
     - misspell
     - nakedret
     - nestif
-    - nilerr
+    - nilnil
     - nlreturn
     - nolintlint
-    - paralleltest
     - prealloc
     - predeclared
     - promlinter
     - revive
     - rowserrcheck
-    - sqlclosecheck
     - staticcheck
-    - structcheck
     - stylecheck
+    - tenv
     - testpackage
     - thelper
-    - tparallel
-    - typecheck
-    - unconvert
     - unparam
-    - unused
     - varcheck
-    - wastedassign
     - whitespace
   # not enabled:
   # - cyclop
   # - errorlint
   # - exhaustivestruct
   # - forbidigo
-  # - forcetypeassert
-  # - gochecknoinits
-  # - gochecknoglobals
   # - gocognit
   # - godot
   # - godox
+  # - goheader
   # - gomnd
   # - noctx
   # - tagliatelle
+  # - varnamelen
   # - wrapcheck
   # - wsl

@@ -2,7 +2,7 @@ all: fmt-check lint-check test build
 
 BINDIR := bin
 
-LINTER_VERSION := 1.40.1
+LINTER_VERSION := 1.44.0
 LINTER := $(BINDIR)/golangci-lint_$(LINTER_VERSION)
 DEV_OS := $(shell uname -s | tr A-Z a-z)
 
