@@ -10,6 +10,7 @@ Go to [Releases](https://github.com/kylrth/freeblock/releases) and download the 
 
 ```sh
 wget 'https://github.com/kylrth/freeblock/releases/download/v1.1.0/freeblock-linux-amd64' -O - | sudo tee /usr/bin/freeblock > /dev/null
+sudo chmod +x /usr/bin/freeblock
 ```
 
 ## usage
