@@ -25,7 +25,7 @@ The `freeblock` binary has three subcommands:
 If you add a comment to a line in `/etc/hosts` like this:
 
 ```hosts
-0.0.0.0 www.reddit.com  #freeblock:09-17
+0.0.0.0 www.reddit.com  #freeblock:09-17 # Don't get distracted!
 ```
 
 freeblock will not unblock Reddit between 9am and 5pm. Only hours are supported, not minutes.
