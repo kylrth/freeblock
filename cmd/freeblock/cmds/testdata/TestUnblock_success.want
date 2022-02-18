@@ -1,5 +1,5 @@
-0.0.0.0   www.reddit.com  #freeblock:07-08 # shouldn't matter
-#0.0.0.0   google.com  #freeblock:06-07
+0.0.0.0   www.reddit.com  #freeblock:07-08 # comments
+#0.0.0.0   google.com  #freeblock:06-07 # shouldn't matter
 1.2.3.4   internal.example.com  #freeblock:06-07
 127.0.0.1 devicename # 4.3.2.1 are my favorite numbers
 #0.0.0.0   example.com # already unblocked

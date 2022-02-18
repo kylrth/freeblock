@@ -85,11 +85,14 @@ func Unblock(domains []string, hostsFile string, nower Nower) error {
 				// There's no IP address to revert to, so we'll just comment out the line.
 				line.Comment()
 			} else {
-				// We'll revert to the commented IP address.
 				commentFields := strings.Fields(string(line)[commentIdx+len(commentPrefix):])
 				if len(commentFields) == 1 && net.ParseIP(commentFields[0]) != nil {
+					// We'll revert to the commented IP address.
 					line.SetIP(commentFields[0])
 					line = line[:commentIdx]
+				} else {
+					// This comment contains something else besides an IP address.
+					line.Comment()
 				}
 			}
 			lines[i] = line
