@@ -9,7 +9,7 @@ Freeblock blocks websites by adding entries with a `0.0.0.0` IP address so that 
 Go to [Releases](https://github.com/kylrth/freeblock/releases) and download the latest release for your platform and architecture to somewhere on your PATH, e.g.:
 
 ```sh
-wget 'https://github.com/kylrth/freeblock/releases/download/v1.1.0/freeblock-linux-amd64' -O - | sudo tee /usr/bin/freeblock > /dev/null
+wget 'https://github.com/kylrth/freeblock/releases/latest/download/freeblock-linux-amd64' -O - | sudo tee /usr/bin/freeblock > /dev/null
 sudo chmod +x /usr/bin/freeblock
 ```
 
